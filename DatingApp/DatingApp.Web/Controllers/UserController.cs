@@ -1,4 +1,5 @@
-﻿using DatingApp.Infrastructure.DbContexts;
+﻿using DatingApp.Domain.Models;
+using DatingApp.Infrastructure.DbContexts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ namespace DatingApp.Web.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult<List<AppUser>>> Get()
         {
             var users = await _dbContext.Users.ToListAsync();
 
@@ -26,7 +27,7 @@ namespace DatingApp.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult<AppUser>> Get(int id)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id == id);
 
