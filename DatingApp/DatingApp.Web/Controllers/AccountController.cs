@@ -22,11 +22,9 @@ namespace DatingApp.Web.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<ActionResult<AppUser>> Register([FromBody]RegisterDto registerDto)
+        public async Task<ActionResult<AppUser>> Register([FromBody] RegisterDto registerDto)
         {
             using var hmac = new HMACSHA512();
-
-
 
             if (await IsUserExists(registerDto.UserName)) return BadRequest(new { message = "Username is already taken,try different username" });
 
@@ -40,6 +38,30 @@ namespace DatingApp.Web.Controllers
 
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
+
+            return Ok(user);
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<ActionResult<AppUser>> Login([FromBody] LoginDto loginDto)
+        {
+            if (!await IsUserExists(loginDto.UserName)) return Unauthorized(new { message = "Invalid Username" });
+
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.UserName);
+
+
+            //Genearte hash based user password and user password salt
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+
+            //compare computed hash password with stored hash password of user
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                //compare if computed hash password is different from stored hash password then its incorrect password
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized(new { message = "Incorrect Password" });  
+            }
 
             return Ok(user);
         }
