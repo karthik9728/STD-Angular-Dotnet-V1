@@ -2,4 +2,21 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+
+# Visual Studio Code specific files
+.vscode/
+
+# Ignore node_modules for Angular
+#/angular-app/node_modules/
+
+
+
+
+
 /BE/DatingApp/DatingApp.sln
+# .gitignore
+
+# Ignore bin and obj folders for .NET
+/BE/DatingApp/bin/
+/BE/DatingApp/obj/
+
