@@ -20,3 +20,17 @@
 /BE/DatingApp/bin/
 /BE/DatingApp/obj/
 
+
+# Ignore class library project within /BE/Application
+/BE/DatingApp/DatingApp.Application/bin/
+/BE/DatingApp/DatingApp.Application/obj/
+
+# Ignore class library project within /BE/DatingApp
+/BE/DatingApp/DatingApp.Domain/bin/
+/BE/DatingApp/DatingApp.Domain/obj/
+
+
+# Ignore class library project within /BE/Infrastructure
+/BE/DatingApp/DatingApp.Infrastructure/bin/
+/BE/DatingApp/DatingApp.Infrastructure/obj/
+
