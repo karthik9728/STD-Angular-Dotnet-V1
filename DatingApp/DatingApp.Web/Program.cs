@@ -10,7 +10,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CustomPolicy", x =>
     {
-        x.WithOrigins("https://locahost:4200");
+        x.WithOrigins("http://locahost:4200");
+        x.AllowAnyOrigin();
         x.AllowAnyHeader();
         x.AllowAnyMethod();
     });
