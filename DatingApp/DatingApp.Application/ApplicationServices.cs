@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DatingApp.Application
 {
-    public static class ApplicationRegistration
+    public static class ApplicationServices
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
