@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
+import { Subscription, Observable, of } from 'rxjs';
+import { User } from '../_models/user';
 
 @Component({
   selector: 'app-nav',
@@ -9,30 +11,19 @@ import { AccountService } from '../_services/account.service';
 })
 export class NavComponent {
   model: any = {};
-
-  loggedIn = false;
+  currentUser$: Observable<User | null> = of(null);
+  userSub: Subscription;
 
   constructor(private accountService: AccountService) {}
 
   ngOnInit() {
-    this.getCurrentUser();
-  }
-
-  //getting current user from local storage
-  getCurrentUser() {
-    this.accountService.currentUser$.subscribe({
-      next: (user) => {
-        this.loggedIn = !!user;
-      },
-      error: (error) => console.log(error),
-    });
+    this.currentUser$ = this.accountService.currentUser$;
   }
 
   onLogin(form: NgForm) {
     this.accountService.login(this.model).subscribe({
       next: (response) => {
         console.log(response);
-        this.loggedIn = true;
       },
       error: (error) => {
         console.log(error);
@@ -47,6 +38,5 @@ export class NavComponent {
 
   onLogout() {
     this.accountService.logout();
-    this.loggedIn = false;
   }
 }
