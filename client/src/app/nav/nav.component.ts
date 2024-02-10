@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
 import { User } from '../_models/user';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -10,21 +11,15 @@ import { User } from '../_models/user';
 })
 export class NavComponent {
   model: any = {};
-  constructor(public accountService: AccountService) {}
+  constructor(public accountService: AccountService, private router: Router) {}
 
   ngOnInit() {}
 
   onLogin(form: NgForm) {
     this.accountService.login(this.model).subscribe({
-      next: (response) => {
-        console.log(response);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-      complete: () => {
-        console.log('Logged In Successfully');
-      },
+      next: () => this.router.navigateByUrl('/members'),
+      error: (error) => console.log(error),
+      complete: () => console.log('Logged In Successfully'),
     });
 
     form.reset();
@@ -32,5 +27,6 @@ export class NavComponent {
 
   onLogout() {
     this.accountService.logout();
+    this.router.navigateByUrl('/');
   }
 }
