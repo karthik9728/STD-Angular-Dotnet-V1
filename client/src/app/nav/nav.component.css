@@ -4,5 +4,5 @@ select.ng-invalid.ng-touched {
 }
 
 .nav-item.active a {
-  color: pink;
+  color: rgb(232, 138, 154);
 }

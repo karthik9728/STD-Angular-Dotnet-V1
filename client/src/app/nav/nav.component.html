@@ -4,7 +4,7 @@
       class="navbar-brand"
       style="cursor: pointer"
       routerLink="/"
-      style="color: palevioletred"
+      style="color: rgb(244, 44, 111)"
       >Dating App</a
     >
     <button
@@ -35,7 +35,7 @@
       <div class="d-flex ms-auto">
         <ul
           class="navbar-nav me-auto mb-2 mb-lg-0"
-          *ngIf="accountService.currentUser$ | async"
+          *ngIf="accountService.currentUser$ | async as user"
         >
           <li class="nav-item dropdown">
             <a
@@ -46,7 +46,7 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              Welcome {{ model.username }}
+              Welcome {{ user.username | titlecase }}
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li>
