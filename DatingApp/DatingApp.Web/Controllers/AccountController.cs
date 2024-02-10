@@ -1,4 +1,5 @@
 ﻿using DatingApp.Application.DTO.User;
+using DatingApp.Application.Services.Interface;
 using DatingApp.Domain.Models;
 using DatingApp.Infrastructure.DbContexts;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace DatingApp.Web.Controllers
     public class AccountController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(ApplicationDbContext dbContext)
+        public AccountController(ApplicationDbContext dbContext, ITokenService tokenService)
         {
             _dbContext = dbContext;
+            _tokenService = tokenService;
         }
 
 
@@ -26,12 +29,12 @@ namespace DatingApp.Web.Controllers
         {
             using var hmac = new HMACSHA512();
 
-            if (await IsUserExists(registerDto.UserName)) return BadRequest(new { message = "Username is already taken,try different username" });
+            if (await IsUserExists(registerDto.Username)) return BadRequest(new { message = "Username is already taken,try different username" });
 
 
             var user = new AppUser
             {
-                UserName = registerDto.UserName,
+                UserName = registerDto.Username,
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmac.Key
             };
@@ -46,10 +49,9 @@ namespace DatingApp.Web.Controllers
         [Route("Login")]
         public async Task<ActionResult<AppUser>> Login([FromBody] LoginDto loginDto)
         {
-            if (!await IsUserExists(loginDto.UserName)) return Unauthorized(new { message = "Invalid Username" });
+            if (!await IsUserExists(loginDto.Username)) return Unauthorized(new { message = "Invalid Username" });
 
-            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.UserName);
-
+            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
             //Genearte hash based user password and user password salt
             using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -63,7 +65,15 @@ namespace DatingApp.Web.Controllers
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized(new { message = "Incorrect Password" });  
             }
 
-            return Ok(user);
+           var token = _tokenService.CreateToken(user);
+
+            UserDto userDto = new UserDto
+            {
+                Username = user.UserName,
+                Token = token,
+            };
+
+            return Ok(userDto);
         }
 
         private async Task<bool> IsUserExists(string userName)
