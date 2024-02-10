@@ -23,6 +23,11 @@ namespace DatingApp.Web.Controllers
         }
 
 
+        /// <summary>
+        /// Register User 
+        /// </summary>
+        /// <param name="registerDto"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Register")]
         public async Task<ActionResult<AppUser>> Register([FromBody] RegisterDto registerDto)
@@ -45,6 +50,11 @@ namespace DatingApp.Web.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// User Login
+        /// </summary>
+        /// <param name="loginDto"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<AppUser>> Login([FromBody] LoginDto loginDto)
