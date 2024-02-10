@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
-import { Subscription, Observable, of } from 'rxjs';
 import { User } from '../_models/user';
 
 @Component({
@@ -11,14 +10,9 @@ import { User } from '../_models/user';
 })
 export class NavComponent {
   model: any = {};
-  currentUser$: Observable<User | null> = of(null);
-  userSub: Subscription;
+  constructor(public accountService: AccountService) {}
 
-  constructor(private accountService: AccountService) {}
-
-  ngOnInit() {
-    this.currentUser$ = this.accountService.currentUser$;
-  }
+  ngOnInit() {}
 
   onLogin(form: NgForm) {
     this.accountService.login(this.model).subscribe({
