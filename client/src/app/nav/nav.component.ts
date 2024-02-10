@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { AccountService } from '../_services/account.service';
 
 @Component({
   selector: 'app-nav',
@@ -12,13 +13,30 @@ export class NavComponent {
     password: '',
   };
 
-  onSubmit(form: NgForm) {
-    this.model = {
-      username: form.value.username,
-      password: form.value.password,
-    };
-    console.log(this.model);
+  username: string;
+
+  loggedIn = false;
+
+  constructor(private accountService: AccountService) {}
+
+  onLogin(form: NgForm) {
+    this.accountService.login(this.model).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.loggedIn = true;
+      },
+      error: (error) => {
+        console.log(error);
+      },
+      complete: () => {
+        console.log('Logged In Successfully');
+      },
+    });
 
     form.reset();
+  }
+
+  onLogout() {
+    this.loggedIn = false;
   }
 }
