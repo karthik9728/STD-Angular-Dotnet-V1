@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AccountService } from '../_services/account.service';
 import { User } from '../_models/user';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -11,15 +12,22 @@ import { Route, Router } from '@angular/router';
 })
 export class NavComponent {
   model: any = {};
-  constructor(public accountService: AccountService, private router: Router) {}
+  constructor(
+    public accountService: AccountService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {}
 
   onLogin(form: NgForm) {
     this.accountService.login(this.model).subscribe({
-      next: () => this.router.navigateByUrl('/members'),
-      error: (error) => console.log(error),
-      complete: () => console.log('Logged In Successfully'),
+      next: () => {
+        this.router.navigateByUrl('/members');
+        this.toastr.success('Logged In Successfully');
+      },
+      error: (error) => this.toastr.error(error?.error?.message),
+      complete: () => {},
     });
 
     form.reset();
@@ -27,6 +35,7 @@ export class NavComponent {
 
   onLogout() {
     this.accountService.logout();
+    this.toastr.success('Logged Out Successfully');
     this.router.navigateByUrl('/');
   }
 }
