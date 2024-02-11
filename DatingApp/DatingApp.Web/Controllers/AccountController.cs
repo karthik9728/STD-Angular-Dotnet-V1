@@ -34,7 +34,7 @@ namespace DatingApp.Web.Controllers
         {
             using var hmac = new HMACSHA512();
 
-            if (await IsUserExists(registerDto.Username)) return BadRequest(new { message = "Username is already taken,try different username" });
+            if (await IsUserExists(registerDto.Username)) return BadRequest("Username is already taken,try different username");
 
 
             var user = new AppUser
@@ -59,7 +59,7 @@ namespace DatingApp.Web.Controllers
         [Route("Login")]
         public async Task<ActionResult<AppUser>> Login([FromBody] LoginDto loginDto)
         {
-            if (!await IsUserExists(loginDto.Username)) return Unauthorized(new { message = "Invalid Username" });
+            if (!await IsUserExists(loginDto.Username)) return Unauthorized("Invalid Username");
 
             var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
@@ -72,7 +72,7 @@ namespace DatingApp.Web.Controllers
             for (int i = 0; i < computedHash.Length; i++)
             {
                 //compare if computed hash password is different from stored hash password then its incorrect password
-                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized(new { message = "Incorrect Password" });  
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Incorrect Password");  
             }
 
            var token = _tokenService.CreateToken(user);
