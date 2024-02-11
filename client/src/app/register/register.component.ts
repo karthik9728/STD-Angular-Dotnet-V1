@@ -22,8 +22,8 @@ export class RegisterComponent {
         this.cancel();
       },
       error: (error) => {
-        if (error?.error?.message) {
-          this.toastr.error(error?.error?.message);
+        if (error?.error) {
+          this.toastr.error(error?.error);
         }
         console.log(error);
       },

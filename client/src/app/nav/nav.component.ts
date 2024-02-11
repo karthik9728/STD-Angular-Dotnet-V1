@@ -26,7 +26,7 @@ export class NavComponent {
         this.router.navigateByUrl('/members');
         this.toastr.success('Logged In Successfully');
       },
-      error: (error) => this.toastr.error(error?.error?.message),
+      error: (error) => this.toastr.error(error?.error),
       complete: () => {},
     });
 
