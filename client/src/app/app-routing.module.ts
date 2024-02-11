@@ -6,6 +6,7 @@ import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { HomeComponent } from './home/home.component';
 import { authGuard } from './_gaurds/auth.guard';
+import { TestErrorComponent } from './errors/test-error/test-error.component';
 
 const appRoutes: Routes = [
   {
@@ -34,6 +35,10 @@ const appRoutes: Routes = [
         component: MessagesComponent,
       },
     ],
+  },
+  {
+    path: 'error',
+    component: TestErrorComponent,
   },
   {
     path: '**',
