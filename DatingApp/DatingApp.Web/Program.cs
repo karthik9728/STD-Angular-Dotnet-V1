@@ -1,10 +1,6 @@
-using DatingApp.Infrastructure.DbContexts;
-using Microsoft.EntityFrameworkCore;
 using DatingApp.Application;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using DatingApp.Web.Extensions;
+using DatingApp.Web.Middleware;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -31,10 +27,10 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 
-    options.IncludeXmlComments(xmlPath);
+    //options.IncludeXmlComments(xmlPath);
 });
 
 var app = builder.Build();
@@ -44,7 +40,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseDeveloperExceptionPage();
 }
+
+//Middleware
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors("CustomPolicy");
 
