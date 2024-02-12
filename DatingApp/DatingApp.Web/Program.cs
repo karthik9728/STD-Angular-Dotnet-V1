@@ -1,4 +1,5 @@
 using DatingApp.Application;
+using DatingApp.Infrastructure;
 using DatingApp.Infrastructure.Common;
 using DatingApp.Infrastructure.DbContexts;
 using DatingApp.Web.Extensions;
@@ -12,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 #region Service
 builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices();
 builder.Services.AddWebAppServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 #endregion
