@@ -18,7 +18,6 @@ namespace DatingApp.Web.Controllers
             _dbContext = dbContext;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<List<AppUser>>> Get()
         {
