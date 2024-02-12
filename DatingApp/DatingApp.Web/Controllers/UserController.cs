@@ -1,14 +1,12 @@
 ﻿using DatingApp.Application.DTO.User;
 using DatingApp.Application.Services.Interface;
-using DatingApp.Domain.Models;
-using DatingApp.Infrastructure.DbContexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace DatingApp.Web.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
