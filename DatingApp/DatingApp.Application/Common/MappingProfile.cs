@@ -14,7 +14,8 @@ namespace DatingApp.Application.Common
     {
         public MappingProfile()
         {
-            CreateMap<AppUser,AppUserDto>().ReverseMap();
+            CreateMap<AppUser, AppUserDto>()
+                    .ForMember(dest => dest.PhotoUrl, opt => opt.MapFrom(src => src.Photos.FirstOrDefault(x => x.IsMain).Url));
             CreateMap<Photo,PhotoDto>().ReverseMap();
         }
     }
