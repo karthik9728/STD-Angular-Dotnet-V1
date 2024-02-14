@@ -19,5 +19,7 @@ namespace DatingApp.Application.Services.Interface
         Task<AppUserDto> GetUserByIdAsync(int id);
 
         Task<AppUserDto> GetUserByUsernameAsync(string username);
+
+        Task UpdateUserAsync(AppUserUpdateDto appUserUpdateDto,string username);
     }
 }

@@ -46,12 +46,21 @@ namespace DatingApp.Application.Services
 
         public async Task<bool> SaveAllAsync()
         {
-            return  await _userRepository.SaveAllAsync();
+            return await _userRepository.SaveAllAsync();
         }
 
         public void Update(AppUserDto userDto)
         {
             var user = _mapper.Map<AppUser>(userDto);
+
+            _userRepository.Update(user);
+        }
+
+        public async Task UpdateUserAsync(AppUserUpdateDto appUserUpdateDto, string username)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            _mapper.Map(appUserUpdateDto, user);
 
             _userRepository.Update(user);
         }
