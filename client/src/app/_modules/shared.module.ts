@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [],
@@ -14,7 +15,8 @@ import { ToastrModule } from 'ngx-toastr';
       closeButton: true,
       positionClass: 'toast-bottom-right',
     }),
+    NgxSpinnerModule.forRoot({ type: 'line-scale-party' }),
   ],
-  exports: [BsDropdownModule, TabsModule, ToastrModule],
+  exports: [BsDropdownModule, TabsModule, ToastrModule, NgxSpinnerModule],
 })
 export class SharedModule {}
