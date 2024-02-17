@@ -16,11 +16,13 @@ namespace DatingApp.Application.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPhotoService _photoService;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IPhotoService photoService, IMapper mapper)
         {
             _userRepository = userRepository;
+            _photoService = photoService;
             _mapper = mapper;
         }
 
@@ -95,6 +97,29 @@ namespace DatingApp.Application.Services
 
             currentMain.IsMain = false;
             photo.IsMain = true;
+
+            _userRepository.Update(user);
+
+            return true;
+        }
+
+        public async Task<bool> DeletePhotoAsync(string username, int photoId)
+        {
+
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null) return false;
+
+            if(photo.PublicId != null)
+            {
+                var result = await _photoService.DeletePhotoAsync(photo.PublicId);
+
+                if(result.Error != null) return false;
+            }
+
+            user.Photos.Remove(photo);
 
             _userRepository.Update(user);
 

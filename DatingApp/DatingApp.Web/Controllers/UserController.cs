@@ -109,5 +109,31 @@ namespace DatingApp.Web.Controllers
 
         }
 
+        [HttpDelete]
+        [Route("delete-photo/{photoId}")]
+        public async Task<ActionResult> DeletePhoto(int photoId)
+        {
+            var username = User.GetUserName();
+
+            var user = await _userService.GetUserByUsernameAsync(username);
+
+            if (user == null) return NotFound();
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo == null) return BadRequest("this is photo is already deleted");
+
+            if (photo.IsMain) return BadRequest("Main photo is not allowed to delete");
+
+            var result = await _userService.DeletePhotoAsync(username, photoId);
+
+            if (!result) return BadRequest("Something went wrong");
+
+            if (!await _userService.SaveAllAsync()) return BadRequest("Problem deleting Photo");
+
+            return Ok();
+
+        }
+
     }
 }

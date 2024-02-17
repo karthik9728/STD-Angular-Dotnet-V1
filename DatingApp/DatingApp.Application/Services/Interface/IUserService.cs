@@ -26,5 +26,7 @@ namespace DatingApp.Application.Services.Interface
         Task UpdateUserPhotoAsync(PhotoDto photoDto, string username);
 
         Task<bool> SetMainPhotoAsync(string username, int photoId);
+
+        Task<bool> DeletePhotoAsync(string username, int photoId);
     }
 }
