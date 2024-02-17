@@ -81,6 +81,7 @@ namespace DatingApp.Web.Controllers
             {
                 Username = user.UserName,
                 Token = token,
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url
             };
 
             return Ok(userDto);
