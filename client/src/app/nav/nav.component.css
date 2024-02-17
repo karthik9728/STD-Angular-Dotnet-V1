@@ -6,3 +6,10 @@ select.ng-invalid.ng-touched {
 .nav-item.active a {
   color: rgb(232, 138, 154);
 }
+
+img {
+  max-height: 40px;
+  border: 2px solid white;
+  display: inline;
+  border-radius: 420%;
+}

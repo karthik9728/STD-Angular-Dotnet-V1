@@ -61,7 +61,7 @@ namespace DatingApp.Web.Controllers
         {
             if (!await IsUserExists(loginDto.Username)) return Unauthorized("Invalid Username");
 
-            var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            var user = await _dbContext.Users.Include(x=>x.Photos).SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
             //Genearte hash based user password and user password salt
             using var hmac = new HMACSHA512(user.PasswordSalt);
