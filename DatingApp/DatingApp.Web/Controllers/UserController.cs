@@ -86,5 +86,28 @@ namespace DatingApp.Web.Controllers
 
             return CreatedAtAction(nameof(GetUser), new { username = user.UserName }, photoDto);
         }
+
+        [HttpPut]
+        [Route("set-main-photo/{photoId}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            var username = User.GetUserName();
+
+            var user = await _userService.GetUserByUsernameAsync(username);
+
+            if (user == null) return NotFound();
+
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
+
+            if (photo.IsMain) return BadRequest("this is already your main photo");
+
+            await _userService.SetMainPhotoAsync(username, photoId);
+
+            if (!await _userService.SaveAllAsync()) return BadRequest("Problem Setting Main Photo");
+
+            return NoContent();
+
+        }
+
     }
 }

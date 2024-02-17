@@ -77,5 +77,28 @@ namespace DatingApp.Application.Services
 
             _userRepository.Update(user);
         }
+
+        public async Task<bool> SetMainPhotoAsync(string username,int photoId)
+        {
+
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            var photo = user.Photos.FirstOrDefault(x=>x.Id == photoId);
+
+            if (photo == null) return false;
+
+            if(photo.IsMain) return false;
+
+            var currentMain = user.Photos.FirstOrDefault(x=>x.IsMain);
+
+            if(currentMain == null) return false;
+
+            currentMain.IsMain = false;
+            photo.IsMain = true;
+
+            _userRepository.Update(user);
+
+            return true;
+        }
     }
 }
