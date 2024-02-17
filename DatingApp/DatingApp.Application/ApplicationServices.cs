@@ -1,6 +1,7 @@
 ﻿using DatingApp.Application.Common;
 using DatingApp.Application.Services;
 using DatingApp.Application.Services.Interface;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DatingApp.Application
@@ -12,6 +13,7 @@ namespace DatingApp.Application
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddScoped<ITokenService,TokenService>();
+            services.AddScoped<IPhotoService,PhotoService>();
             services.AddScoped<IUserService,UserService>();
 
             return services;

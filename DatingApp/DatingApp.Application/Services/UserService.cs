@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DatingApp.Application.DTO.Photo;
 using DatingApp.Application.DTO.User;
 using DatingApp.Application.Services.Interface;
 using DatingApp.Domain.Models;
@@ -61,6 +62,18 @@ namespace DatingApp.Application.Services
             var user = await _userRepository.GetUserByUsernameAsync(username);
 
             _mapper.Map(appUserUpdateDto, user);
+
+            _userRepository.Update(user);
+        }
+
+        public async Task UpdateUserPhotoAsync(PhotoDto photoDto, string username)
+        {
+
+            var user = await _userRepository.GetUserByUsernameAsync(username);
+
+            var photo = _mapper.Map<Photo>(photoDto);
+
+            user.Photos.Add(photo); 
 
             _userRepository.Update(user);
         }

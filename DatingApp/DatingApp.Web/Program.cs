@@ -1,10 +1,12 @@
 using DatingApp.Application;
+using DatingApp.Application.Common;
 using DatingApp.Infrastructure;
 using DatingApp.Infrastructure.Common;
 using DatingApp.Infrastructure.DbContexts;
 using DatingApp.Web.Extensions;
 using DatingApp.Web.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -18,7 +20,8 @@ builder.Services.AddWebAppServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
 #endregion
 
-
+//Cloudinary Settings
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
 
 builder.Services.AddControllers();

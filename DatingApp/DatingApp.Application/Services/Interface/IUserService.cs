@@ -1,4 +1,5 @@
-﻿using DatingApp.Application.DTO.User;
+﻿using DatingApp.Application.DTO.Photo;
+using DatingApp.Application.DTO.User;
 using DatingApp.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace DatingApp.Application.Services.Interface
 
         Task<AppUserDto> GetUserByUsernameAsync(string username);
 
-        Task UpdateUserAsync(AppUserUpdateDto appUserUpdateDto,string username);
+        Task UpdateUserAsync(AppUserUpdateDto appUserUpdateDto, string username);
+
+        Task UpdateUserPhotoAsync(PhotoDto photoDto, string username);
     }
 }
