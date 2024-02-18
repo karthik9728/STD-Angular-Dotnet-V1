@@ -85,11 +85,18 @@ namespace DatingApp.Web.Controllers
 
             var token = _tokenService.CreateToken(user);
 
+            string photo = "";
+
+            if (user.Photos.Any())
+            {
+                photo = user.Photos.FirstOrDefault(x => x.IsMain).Url;
+            }
+
             UserDto userDto = new UserDto
             {
                 Username = user.UserName,
                 Token = token,
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url,
+                PhotoUrl = photo,
                 KnownAs = user.KnownAs
             };
 
