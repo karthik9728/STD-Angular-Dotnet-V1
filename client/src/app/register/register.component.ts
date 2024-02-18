@@ -32,7 +32,12 @@ export class RegisterComponent {
 
   initializeForm() {
     this.registerForm = this.fb.group({
+      gender: ['male', Validators.required],
       username: ['', Validators.required],
+      knownAs: ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
+      city: ['', Validators.required],
+      country: ['', Validators.required],
       password: [
         '',
         [
