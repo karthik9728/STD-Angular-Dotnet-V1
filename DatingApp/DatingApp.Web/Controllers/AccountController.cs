@@ -1,4 +1,5 @@
-﻿using DatingApp.Application.DTO.User;
+﻿using AutoMapper;
+using DatingApp.Application.DTO.User;
 using DatingApp.Application.Services.Interface;
 using DatingApp.Domain.Models;
 using DatingApp.Infrastructure.DbContexts;
@@ -15,11 +16,13 @@ namespace DatingApp.Web.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AccountController(ApplicationDbContext dbContext, ITokenService tokenService)
+        public AccountController(ApplicationDbContext dbContext, ITokenService tokenService, IMapper mapper)
         {
             _dbContext = dbContext;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
 
@@ -30,24 +33,29 @@ namespace DatingApp.Web.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("Register")]
-        public async Task<ActionResult<AppUser>> Register([FromBody] RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
         {
             using var hmac = new HMACSHA512();
 
-            if (await IsUserExists(registerDto.Username)) return BadRequest("Username is already taken,try different username");
+            if (await IsUserExists(registerDto.UserName)) return BadRequest("Username is already taken,try different username");
 
+            var user = _mapper.Map<AppUser>(registerDto);
 
-            var user = new AppUser
-            {
-                UserName = registerDto.Username,
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            user.UserName = registerDto.UserName;
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
+
 
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
 
-            return Ok(user);
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs,
+
+            };
         }
 
         /// <summary>
@@ -61,7 +69,7 @@ namespace DatingApp.Web.Controllers
         {
             if (!await IsUserExists(loginDto.Username)) return Unauthorized("Invalid Username");
 
-            var user = await _dbContext.Users.Include(x=>x.Photos).SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            var user = await _dbContext.Users.Include(x => x.Photos).SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
 
             //Genearte hash based user password and user password salt
             using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -72,16 +80,17 @@ namespace DatingApp.Web.Controllers
             for (int i = 0; i < computedHash.Length; i++)
             {
                 //compare if computed hash password is different from stored hash password then its incorrect password
-                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Incorrect Password");  
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Incorrect Password");
             }
 
-           var token = _tokenService.CreateToken(user);
+            var token = _tokenService.CreateToken(user);
 
             UserDto userDto = new UserDto
             {
                 Username = user.UserName,
                 Token = token,
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url,
+                KnownAs = user.KnownAs
             };
 
             return Ok(userDto);
