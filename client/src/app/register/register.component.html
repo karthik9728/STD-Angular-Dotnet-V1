@@ -1,23 +1,75 @@
-<form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off">
+<form [formGroup]="registerForm" (ngSubmit)="register()" autocomplete="off">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr />
   <div class="mb-3">
     <input
       type="text"
+      [class.is-invalid]="registerForm.get('username')?.error"
       class="form-control"
-      name="username"
-      [(ngModel)]="model.username"
+      formControlName="username"
       placeholder="username"
     />
+    <span
+      *ngIf="
+        !registerForm.get('username').valid &&
+        registerForm.get('username').touched
+      "
+      class="help-block text-danger"
+    >
+      Please enter username
+    </span>
   </div>
   <div class="mb-3">
     <input
       type="password"
       class="form-control"
-      name="password"
-      [(ngModel)]="model.password"
+      formControlName="password"
       placeholder="password"
     />
+    <div
+      class="help-block text-danger"
+      *ngIf="
+        registerForm.get('password').touched &&
+        registerForm.get('password')?.hasError('required')
+      "
+    >
+      Please enter password
+    </div>
+    <div
+      class="help-block text-danger"
+      *ngIf="registerForm.get('password')?.hasError('minlength')"
+    >
+      Must be minimum 4 characters
+    </div>
+    <div
+      class="help-block text-danger"
+      *ngIf="registerForm.get('password')?.hasError('maxlength')"
+    >
+      Must be maximum 12 characters
+    </div>
+  </div>
+  <div class="mb-3">
+    <input
+      type="password"
+      class="form-control"
+      formControlName="confirmPassword"
+      placeholder="confirm password"
+    />
+    <div
+      class="help-block text-danger"
+      *ngIf="
+        registerForm.get('confirmPassword').touched &&
+        registerForm.get('confirmPassword')?.hasError('required')
+      "
+    >
+      Please enter confirm password
+    </div>
+    <div
+      class="help-block text-danger"
+      *ngIf="registerForm.get('confirmPassword')?.hasError('notMatching')"
+    >
+      Please enter correct confirm password same as password
+    </div>
   </div>
   <div class="text-center">
     <button class="btn btn-success me-2" type="submit">Register</button>
@@ -26,3 +78,6 @@
     </button>
   </div>
 </form>
+
+<!-- <p>From value: {{ registerForm.value | json }}</p>
+<p>From status: {{ registerForm.status | json }}</p> -->
