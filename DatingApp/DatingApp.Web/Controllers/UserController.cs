@@ -29,7 +29,9 @@ namespace DatingApp.Web.Controllers
         [HttpGet]
         public async Task<ActionResult<List<AppUserDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await _userService.GetUsersAsync(userParams);
+            var username = User.GetUserName();
+
+            var users = await _userService.GetUsersAsync(userParams,username);
 
             Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage,users.PageSize,users.TotalCount,users.TotalPage));
 

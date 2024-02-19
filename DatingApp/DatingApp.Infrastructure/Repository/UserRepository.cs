@@ -30,11 +30,15 @@ namespace DatingApp.Infrastructure.Repository
             return await _dbContext.Users.Include(x => x.Photos).FirstOrDefaultAsync(x => x.UserName == username.ToLower());
         }
 
-        public async Task<PagedList<AppUser>> GetUsersAsync(int pageNumber, int pageSize)
+        public async Task<PagedList<AppUser>> GetUsersAsync(int pageNumber, int pageSize,string currentUsername,string gender)
         {
-            var query = _dbContext.Users.AsNoTracking().Include(x => x.Photos);
+            var query = _dbContext.Users.Include(x=>x.Photos).AsQueryable();
 
-            return await PagedList<AppUser>.CreateAsync(query, pageNumber, pageSize);
+            query = query.Where(x => x.UserName != currentUsername);
+
+            query = query.Where(x => x.Gender == gender);
+
+            return await PagedList<AppUser>.CreateAsync(query.AsNoTracking(), pageNumber, pageSize);
         }
 
         public async Task<bool> SaveAllAsync()

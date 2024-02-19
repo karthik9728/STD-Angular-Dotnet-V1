@@ -42,12 +42,21 @@ namespace DatingApp.Application.Services
             return _mapper.Map<AppUserDto>(user);
         }
 
-        public async Task<PagedList<AppUserDto>> GetUsersAsync(UserParams userParams)
+        public async Task<PagedList<AppUserDto>> GetUsersAsync(UserParams userParams,string username)
         {
-            var users = await _userRepository.GetUsersAsync(userParams.PageNumber, userParams.PageSize);
+            var currentUser = await _userRepository.GetUserByUsernameAsync(username);
+
+            userParams.CurrentUsername = currentUser.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+
+            var users = await _userRepository.GetUsersAsync(userParams.PageNumber, userParams.PageSize,userParams.CurrentUsername,userParams.Gender);
 
             var usersDtoPagedList = new PagedList<AppUserDto>(
-                                      _mapper.Map<List<AppUserDto>>(users), 
+                                      _mapper.Map<List<AppUserDto>>(users),
                                       users.TotalCount,
                                       users.CurrentPage,
                                       users.PageSize);

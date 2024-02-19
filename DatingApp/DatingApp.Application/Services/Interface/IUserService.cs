@@ -17,7 +17,7 @@ namespace DatingApp.Application.Services.Interface
 
         Task<bool> SaveAllAsync();
 
-        Task<PagedList<AppUserDto>> GetUsersAsync(UserParams userParams);
+        Task<PagedList<AppUserDto>> GetUsersAsync(UserParams userParams, string username);
 
         Task<AppUserDto> GetUserByIdAsync(int id);
 
