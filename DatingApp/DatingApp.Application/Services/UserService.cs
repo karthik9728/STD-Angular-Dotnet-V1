@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using DatingApp.Application.DTO.Photo;
 using DatingApp.Application.DTO.User;
+using DatingApp.Application.InputModels;
 using DatingApp.Application.Services.Interface;
 using DatingApp.Domain.Models;
+using DatingApp.Infrastructure.Helpers;
 using DatingApp.Infrastructure.Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -40,11 +42,17 @@ namespace DatingApp.Application.Services
             return _mapper.Map<AppUserDto>(user);
         }
 
-        public async Task<IEnumerable<AppUserDto>> GetUsersAsync()
+        public async Task<PagedList<AppUserDto>> GetUsersAsync(UserParams userParams)
         {
-            var users = await _userRepository.GetUsersAsync();
+            var users = await _userRepository.GetUsersAsync(userParams.PageNumber, userParams.PageSize);
 
-            return _mapper.Map<List<AppUserDto>>(users);
+            var usersDtoPagedList = new PagedList<AppUserDto>(
+                                      _mapper.Map<List<AppUserDto>>(users), 
+                                      users.TotalCount,
+                                      users.CurrentPage,
+                                      users.PageSize);
+
+            return usersDtoPagedList;
         }
 
         public async Task<bool> SaveAllAsync()
@@ -75,25 +83,25 @@ namespace DatingApp.Application.Services
 
             var photo = _mapper.Map<Photo>(photoDto);
 
-            user.Photos.Add(photo); 
+            user.Photos.Add(photo);
 
             _userRepository.Update(user);
         }
 
-        public async Task<bool> SetMainPhotoAsync(string username,int photoId)
+        public async Task<bool> SetMainPhotoAsync(string username, int photoId)
         {
 
             var user = await _userRepository.GetUserByUsernameAsync(username);
 
-            var photo = user.Photos.FirstOrDefault(x=>x.Id == photoId);
+            var photo = user.Photos.FirstOrDefault(x => x.Id == photoId);
 
             if (photo == null) return false;
 
-            if(photo.IsMain) return false;
+            if (photo.IsMain) return false;
 
-            var currentMain = user.Photos.FirstOrDefault(x=>x.IsMain);
+            var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
 
-            if(currentMain == null) return false;
+            if (currentMain == null) return false;
 
             currentMain.IsMain = false;
             photo.IsMain = true;
@@ -112,11 +120,11 @@ namespace DatingApp.Application.Services
 
             if (photo == null) return false;
 
-            if(photo.PublicId != null)
+            if (photo.PublicId != null)
             {
                 var result = await _photoService.DeletePhotoAsync(photo.PublicId);
 
-                if(result.Error != null) return false;
+                if (result.Error != null) return false;
             }
 
             user.Photos.Remove(photo);

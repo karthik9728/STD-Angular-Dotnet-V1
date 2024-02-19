@@ -1,6 +1,8 @@
 ﻿using DatingApp.Application.DTO.Photo;
 using DatingApp.Application.DTO.User;
+using DatingApp.Application.InputModels;
 using DatingApp.Domain.Models;
+using DatingApp.Infrastructure.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace DatingApp.Application.Services.Interface
 
         Task<bool> SaveAllAsync();
 
-        Task<IEnumerable<AppUserDto>> GetUsersAsync();
+        Task<PagedList<AppUserDto>> GetUsersAsync(UserParams userParams);
 
         Task<AppUserDto> GetUserByIdAsync(int id);
 

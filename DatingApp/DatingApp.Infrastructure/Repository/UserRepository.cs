@@ -1,5 +1,6 @@
 ﻿using DatingApp.Domain.Models;
 using DatingApp.Infrastructure.DbContexts;
+using DatingApp.Infrastructure.Helpers;
 using DatingApp.Infrastructure.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,7 +22,7 @@ namespace DatingApp.Infrastructure.Repository
 
         public async Task<AppUser> GetUserByIdAsync(int id)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(x=>x.Id == id);
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
@@ -29,9 +30,11 @@ namespace DatingApp.Infrastructure.Repository
             return await _dbContext.Users.Include(x => x.Photos).FirstOrDefaultAsync(x => x.UserName == username.ToLower());
         }
 
-        public async Task<IEnumerable<AppUser>> GetUsersAsync()
+        public async Task<PagedList<AppUser>> GetUsersAsync(int pageNumber, int pageSize)
         {
-            return await _dbContext.Users.Include(x=>x.Photos).ToListAsync();
+            var query = _dbContext.Users.AsNoTracking().Include(x => x.Photos);
+
+            return await PagedList<AppUser>.CreateAsync(query, pageNumber, pageSize);
         }
 
         public async Task<bool> SaveAllAsync()
