@@ -14,7 +14,7 @@ namespace DatingApp.Infrastructure.Repository.Interface
 
         Task<bool> SaveAllAsync();
 
-        Task<PagedList<AppUser>> GetUsersAsync(int pageNumber, int pageSize, string currentUsername, string gender);
+        Task<PagedList<AppUser>> GetUsersAsync(int pageNumber, int pageSize, string currentUsername, string gender,int minAge,int maxAge);
 
         Task<AppUser> GetUserByIdAsync(int id);
 
