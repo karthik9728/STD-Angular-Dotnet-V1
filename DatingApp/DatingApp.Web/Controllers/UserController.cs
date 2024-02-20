@@ -4,6 +4,7 @@ using DatingApp.Application.InputModels;
 using DatingApp.Application.Services.Interface;
 using DatingApp.Application.ViewModels;
 using DatingApp.Web.Extensions;
+using DatingApp.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -11,6 +12,7 @@ using System.Security.Claims;
 
 namespace DatingApp.Web.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

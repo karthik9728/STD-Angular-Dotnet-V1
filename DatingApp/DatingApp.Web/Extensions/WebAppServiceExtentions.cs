@@ -1,4 +1,5 @@
 ﻿using DatingApp.Infrastructure.DbContexts;
+using DatingApp.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.Web.Extensions
@@ -31,6 +32,8 @@ namespace DatingApp.Web.Extensions
             });
 
             #endregion
+
+            services.AddScoped<LogUserActivity>();
 
             return services;
         }

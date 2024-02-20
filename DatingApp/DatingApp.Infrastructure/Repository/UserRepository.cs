@@ -30,7 +30,7 @@ namespace DatingApp.Infrastructure.Repository
             return await _dbContext.Users.Include(x => x.Photos).FirstOrDefaultAsync(x => x.UserName == username.ToLower());
         }
 
-        public async Task<PagedList<AppUser>> GetUsersAsync(int pageNumber, int pageSize,string currentUsername,string gender, int minAge, int maxAge)
+        public async Task<PagedList<AppUser>> GetUsersAsync(int pageNumber, int pageSize,string currentUsername,string gender, int minAge, int maxAge, string orderBy)
         {
             var query = _dbContext.Users.Include(x=>x.Photos).AsQueryable();
 
@@ -43,6 +43,12 @@ namespace DatingApp.Infrastructure.Repository
             var maxDob = DateTime.Today.AddYears(-minAge);
 
             query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
+            query = orderBy switch
+            {
+                "created" => query.OrderByDescending(x => x.Created),
+                _ => query.OrderByDescending(x=>x.LastActive)
+            };; 
 
             return await PagedList<AppUser>.CreateAsync(query.AsNoTracking(), pageNumber, pageSize);
         }

@@ -53,7 +53,7 @@ namespace DatingApp.Application.Services
                 userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
             }
 
-            var users = await _userRepository.GetUsersAsync(userParams.PageNumber, userParams.PageSize,userParams.CurrentUsername,userParams.Gender,userParams.MinAge,userParams.MaxAge);
+            var users = await _userRepository.GetUsersAsync(userParams.PageNumber, userParams.PageSize,userParams.CurrentUsername,userParams.Gender,userParams.MinAge,userParams.MaxAge,userParams.OrderBy);
 
             var usersDtoPagedList = new PagedList<AppUserDto>(
                                       _mapper.Map<List<AppUserDto>>(users),
